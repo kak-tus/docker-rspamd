@@ -11,5 +11,6 @@ RUN \
 
 COPY logging.inc.template /etc/rspamd/override.d/logging.inc
 COPY options.inc.template /etc/rspamd/override.d/options.inc
+COPY dcc.conf /etc/rspamd/modules.d/dcc.conf
 
 CMD rspamd -f -u rspamd -g rspamd
