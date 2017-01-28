@@ -25,7 +25,7 @@ COPY rspamd_start.sh /usr/local/bin/rspamd_start.sh
 COPY rspamd.hcl /etc/rspamd.hcl
 COPY pgpass.template /root/pgpass.template
 COPY learn.template /root/learn.template
-COPY worker-controller.inc.template /etc/rspamd/override.d/worker-controller.inc
+COPY worker-controller.inc.template /root/worker-controller.inc.template
 
 ENV USER_UID=1000
 ENV USER_GID=1000

@@ -17,6 +17,11 @@ template {
   perms = 0755
 }
 
+template {
+  source = "/root/worker-controller.inc.template"
+  destination = "/etc/rspamd/override.d/worker-controller.inc"
+}
+
 exec {
   command = "/usr/local/bin/rspamd_start.sh"
   splay = "60s"

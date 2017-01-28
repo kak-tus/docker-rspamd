@@ -1,3 +1,3 @@
 bind_socket = "0.0.0.0:11334";
-password = "";
+password = "{{ with secret "secret/rspamd/password" }}{{ .Data.value }}{{ end }}";
 secure_ip = "0.0.0.0/1";
