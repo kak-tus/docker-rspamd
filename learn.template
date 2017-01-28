@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+learn_do() {
+  echo "Learn $1"
+  last_pg_id=$( cat /var/lib/rspamd/last_$1_pg_id 2>/dev/null )
+
+  if [ -z "$last_pg_id" ]; then
+    last_pg_id=0
+  fi
+
+  echo "Last pg id: $last_pg_id"
+
+  if [ "$1" = "ham" ]; then
+    type="Ham"
+  else
+    type="Spam"
+  fi
+
+  ids=$( psql -At -U postgres -h {{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }} mail -c "
+  SELECT physmessage_id FROM dbmail_messages
+  WHERE mailbox_idnr IN (
+    SELECT mailbox_idnr FROM dbmail_mailboxes
+    WHERE name = '$type'
+  )
+  AND physmessage_id > $last_pg_id
+  ORDER BY physmessage_id;
+  " )
+
+  for id in $ids; do
+    echo "id: $id"
+    result=$( psql -At -U postgres -h {{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }} mail -c "
+    SELECT convert_from( dbmail_mimeparts.data, 'SQL_ASCII' )
+    FROM dbmail_partlists
+    LEFT JOIN dbmail_mimeparts ON dbmail_mimeparts.id = dbmail_partlists.part_id
+    WHERE dbmail_partlists.physmessage_id = $id
+    ORDER BY dbmail_partlists.part_order, dbmail_partlists.part_id;
+    " 2>/dev/null | rspamc -h {{ if service "rspamd" }}{{ range service "rspamd" }}{{ .Address }}:{{ .Port }}{{ end }}{{ else }}rspamd.weave.local:11334{{ end }} learn_$1 )
+
+    echo $result
+    status=$( echo $result | grep "IO write error" )
+    if [ -n "$status" ]; then
+      exit
+    fi
+
+    echo $id > /var/lib/rspamd/last_$1_pg_id
+  done
+}
+
+learn_do "ham"
+learn_do "spam"

@@ -1,0 +1,1 @@
+{{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }}:{{ if service "db" }}{{ range service "db" }}{{ .Port }}{{ end }}{{ else }}5432{{ end }}:*:postgres:{{ with secret "secret/ansible/docker_postgresql/pg_password" }}{{ .Data.value }}{{ end }}
