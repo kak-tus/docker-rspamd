@@ -34,7 +34,7 @@ learn_do() {
     LEFT JOIN dbmail_mimeparts ON dbmail_mimeparts.id = dbmail_partlists.part_id
     WHERE dbmail_partlists.physmessage_id = $id
     ORDER BY dbmail_partlists.part_order, dbmail_partlists.part_id;
-    " 2>/dev/null | rspamc -h {{ if service "rspamd" }}{{ range service "rspamd" }}{{ .Address }}:{{ .Port }}{{ end }}{{ else }}rspamd.weave.local:11334{{ end }} learn_$1 )
+    " 2>/dev/null | rspamc -h {{ if service "rspamd-controller" }}{{ range service "rspamd-controller" }}{{ .Address }}:{{ .Port }}{{ end }}{{ else }}rspamd.weave.local:11334{{ end }} learn_$1 )
 
     echo $result
     status=$( echo $result | grep "IO write error" )
