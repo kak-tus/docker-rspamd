@@ -1,0 +1,5 @@
+greylist {
+    .include(try=true,priority=5) "${DBDIR}/dynamic/dcc.conf"
+    .include(try=true,priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/dcc.conf"
+    .include(try=true,priority=10) "$LOCAL_CONFDIR/override.d/dcc.conf"
+}

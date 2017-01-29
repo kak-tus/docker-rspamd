@@ -1,0 +1,2 @@
+servers = "{{ if service "redis" }}{{ range service "redis" }}{{ .Address }}{{ end }}{{ else }}redis.weave.local{{ end }}";
+password = "{{ with secret "secret/rspamd/redis/password" }}{{ .Data.value }}{{ end }}";

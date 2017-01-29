@@ -22,6 +22,11 @@ template {
   destination = "/etc/rspamd/override.d/worker-controller.inc"
 }
 
+template {
+  source = "/root/redis.conf.template"
+  destination = "/etc/rspamd/modules.d/redis.conf"
+}
+
 exec {
   command = "/usr/local/bin/rspamd_start.sh"
   splay = "60s"

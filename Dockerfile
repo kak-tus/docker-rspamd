@@ -26,6 +26,8 @@ COPY rspamd.hcl /etc/rspamd.hcl
 COPY pgpass.template /root/pgpass.template
 COPY learn.template /root/learn.template
 COPY worker-controller.inc.template /root/worker-controller.inc.template
+COPY redis.conf.template /root/redis.conf.template
+COPY greylist.conf.template /etc/rspamd/modules.d/greylist.conf
 
 ENV USER_UID=1000
 ENV USER_GID=1000
