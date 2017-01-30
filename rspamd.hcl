@@ -24,7 +24,7 @@ template {
 
 template {
   source = "/root/redis.conf.template"
-  destination = "/etc/rspamd/modules.d/redis.conf"
+  destination = "/etc/rspamd/local.d/redis.conf"
 }
 
 exec {
