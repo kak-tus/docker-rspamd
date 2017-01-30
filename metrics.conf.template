@@ -1,10 +1,16 @@
-metric {
-  actions {
-    greylist = 0.1;
+actions {
+  reject = 15;
+  add_header = 6;
+  greylist = 0.1;
+}
+
+group "bayes" {
+  symbol "BAYES_SPAM" {
+    weight = 6.0;
+    description = "Message probably spam, probability: ";
   }
-  group "bayes" {
-    symbol "BAYES_SPAM" {
-      weight = 6.0;
-    }
+  symbol "BAYES_HAM" {
+    weight = -3.0;
+    description = "Message probably ham, probability: ";
   }
 }
