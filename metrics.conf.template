@@ -1,0 +1,10 @@
+metric {
+  actions {
+    greylist = 0.1;
+  }
+  group "bayes" {
+    symbol "BAYES_SPAM" {
+      weight = 6.0;
+    }
+  }
+}
