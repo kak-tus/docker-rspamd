@@ -14,3 +14,18 @@ group "bayes" {
     description = "Message probably ham, probability: ";
   }
 }
+
+group "mx_check" {
+  symbol "MX_INVALID" {
+    weight = 4.0;
+    description = "Domain has no working MX";
+  }
+  symbol "MX_MISSING" {
+    weight = 1.5;
+    description = "Domain has no resolvable MX";
+  }
+  symbol "MX_GOOD" {
+    weight = -0.1;
+    description = "Domain has working MX";
+  }
+}
