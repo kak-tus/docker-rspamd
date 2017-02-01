@@ -29,3 +29,10 @@ group "mx_check" {
     description = "Domain has working MX";
   }
 }
+
+group "dcc" {
+  symbol "DCC_BULK" {
+    weight = 2.0;
+    description = "Detected as bulk mail by DCC";
+  }
+}
