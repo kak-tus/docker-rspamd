@@ -18,8 +18,8 @@ RUN \
   && apk del curl unzip \
   && rm -rf /var/cache/apk/*
 
-COPY logging.inc.template /etc/rspamd/override.d/logging.inc
-COPY options.inc.template /etc/rspamd/override.d/options.inc
+COPY logging.inc.template /etc/rspamd/local.d/logging.inc
+COPY options.inc.template /etc/rspamd/local.d/options.inc
 COPY dcc.conf.template /root/dcc.conf.template
 COPY rspamd_start.sh /usr/local/bin/rspamd_start.sh
 COPY rspamd.hcl /etc/rspamd.hcl
@@ -28,7 +28,7 @@ COPY learn.template /root/learn.template
 COPY worker-controller.inc.template /root/worker-controller.inc.template
 COPY redis.conf.template /root/redis.conf.template
 COPY greylist.conf.template /etc/rspamd/modules.d/greylist.conf
-COPY metrics.conf.template /etc/rspamd/override.d/metrics.conf
+COPY metrics.conf.template /etc/rspamd/local.d/metrics.conf
 COPY mx_check.conf.template /etc/rspamd/modules.d/mx_check.conf
 
 ENV USER_UID=1000

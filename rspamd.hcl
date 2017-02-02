@@ -19,7 +19,7 @@ template {
 
 template {
   source = "/root/worker-controller.inc.template"
-  destination = "/etc/rspamd/override.d/worker-controller.inc"
+  destination = "/etc/rspamd/local.d/worker-controller.inc"
 }
 
 template {

@@ -4,17 +4,6 @@ actions {
   greylist = 0;
 }
 
-group "bayes" {
-  symbol "BAYES_SPAM" {
-    weight = 6.0;
-    description = "Message probably spam, probability: ";
-  }
-  symbol "BAYES_HAM" {
-    weight = -3.0;
-    description = "Message probably ham, probability: ";
-  }
-}
-
 group "mx_check" {
   symbol "MX_INVALID" {
     weight = 4.0;
@@ -32,7 +21,7 @@ group "mx_check" {
 
 group "dcc" {
   symbol "DCC_BULK" {
-    weight = 4.0;
+    weight = 2.0;
     description = "Detected as bulk mail by DCC";
   }
 }
