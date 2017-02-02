@@ -32,7 +32,7 @@ group "mx_check" {
 
 group "dcc" {
   symbol "DCC_BULK" {
-    weight = 2.0;
+    weight = 4.0;
     description = "Detected as bulk mail by DCC";
   }
 }
