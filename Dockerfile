@@ -41,4 +41,7 @@ ENV CONSUL_TOKEN=
 ENV VAULT_ADDR=
 ENV VAULT_TOKEN=
 
+EXPOSE 11333
+EXPOSE 11334
+
 CMD consul-template -config /etc/rspamd.hcl
