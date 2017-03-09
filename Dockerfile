@@ -44,4 +44,4 @@ ENV VAULT_TOKEN=
 EXPOSE 11333
 EXPOSE 11334
 
-CMD consul-template -config /etc/rspamd.hcl
+CMD [ "/usr/local/bin/consul-template", "-config", "/etc/rspamd.hcl" ]
