@@ -1,1 +1,16 @@
-{{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }}:{{ if service "db" }}{{ range service "db" }}{{ .Port }}{{ end }}{{ else }}5432{{ end }}:*:postgres:{{ with secret "secret/ansible/docker_postgresql/pg_password" }}{{ .Data.value }}{{ end }}
+{{- if service "db" }}
+  {{- range $i, $s := service "db" }}
+    {{- if eq $i 0 }}
+      {{- $s.Address }}
+    {{- end }}
+  {{- end }}
+{{- else }}db.weave.local
+{{- end }}:
+{{- if service "db" }}
+  {{- range $i, $s := service "db" }}
+    {{- if eq $i 0 }}
+      {{- $s.Port }}
+    {{- end }}
+  {{- end }}
+{{- else }}5432
+{{- end }}:*:postgres:{{ with secret "secret/ansible/docker_postgresql/pg_password" }}{{ .Data.value }}{{ end }}

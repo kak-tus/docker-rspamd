@@ -16,7 +16,27 @@ learn_do() {
     type="Spam"
   fi
 
-  ids=$( psql -At -U postgres -h {{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }} mail -c "
+  db_host="
+  {{- if service "db" }}
+    {{- range $i, $s := service "db" }}
+      {{- if eq $i 0 }}
+        {{- $s.Address }}
+      {{- end }}
+    {{- end }}
+  {{- else }}db.weave.local
+  {{- end }}"
+
+  rspamd_host="
+  {{- if service "rspamd-controller" }}
+    {{- range $i, $s := service "rspamd-controller" }}
+      {{- if eq $i 0 }}
+        {{- $s.Address }}:{{ $s.Port }}
+      {{- end }}
+    {{- end }}
+  {{- else }}rspamd.weave.local:11334
+  {{- end }}"
+
+  ids=$( psql -At -U postgres -h "$db_host" mail -c "
   SELECT physmessage_id FROM dbmail_messages
   WHERE mailbox_idnr IN (
     SELECT mailbox_idnr FROM dbmail_mailboxes
@@ -28,13 +48,13 @@ learn_do() {
 
   for id in $ids; do
     echo "id: $id"
-    result=$( psql -At -U postgres -h {{ if service "db" }}{{ range service "db" }}{{ .Address }}{{ end }}{{ else }}db.weave.local{{ end }} mail -c "
+    result=$( psql -At -U postgres -h "$db_host" mail -c "
     SELECT convert_from( dbmail_mimeparts.data, 'SQL_ASCII' )
     FROM dbmail_partlists
     LEFT JOIN dbmail_mimeparts ON dbmail_mimeparts.id = dbmail_partlists.part_id
     WHERE dbmail_partlists.physmessage_id = $id
     ORDER BY dbmail_partlists.part_order, dbmail_partlists.part_id;
-    " 2>/dev/null | rspamc -P {{ with secret "secret/rspamd/password" }}{{ .Data.value }}{{ end }} -h {{ if service "rspamd-controller" }}{{ range service "rspamd-controller" }}{{ .Address }}:{{ .Port }}{{ end }}{{ else }}rspamd.weave.local:11334{{ end }} learn_$1 )
+    " 2>/dev/null | rspamc -P {{ with secret "secret/rspamd/password" }}{{ .Data.value }}{{ end }} -h "$rspamd_host" learn_$1 )
 
     echo $result
     status=$( echo $result | grep "IO write error" )
