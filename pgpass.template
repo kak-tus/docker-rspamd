@@ -1,5 +1,5 @@
 {{- if service "db" }}
-  {{- range $i, $s := service "db" }}
+  {{- range $i, $s := service "db~_agent" }}
     {{- if eq $i 0 }}
       {{- $s.Address }}
     {{- end }}
@@ -7,7 +7,7 @@
 {{- else }}db.weave.local
 {{- end }}:
 {{- if service "db" }}
-  {{- range $i, $s := service "db" }}
+  {{- range $i, $s := service "db~_agent" }}
     {{- if eq $i 0 }}
       {{- $s.Port }}
     {{- end }}

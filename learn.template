@@ -18,7 +18,7 @@ learn_do() {
 
   db_host="
   {{- if service "db" }}
-    {{- range $i, $s := service "db" }}
+    {{- range $i, $s := service "db~_agent" }}
       {{- if eq $i 0 }}
         {{- $s.Address }}
       {{- end }}
@@ -28,7 +28,7 @@ learn_do() {
 
   rspamd_host="
   {{- if service "rspamd-controller" }}
-    {{- range $i, $s := service "rspamd-controller" }}
+    {{- range $i, $s := service "rspamd-controller~_agent" }}
       {{- if eq $i 0 }}
         {{- $s.Address }}:{{ $s.Port }}
       {{- end }}

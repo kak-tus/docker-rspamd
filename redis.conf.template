@@ -1,6 +1,6 @@
 servers = "
 {{- if service "redis-rspamd" }}
-  {{- range $i, $s := service "redis-rspamd" }}
+  {{- range $i, $s := service "redis-rspamd~_agent" }}
     {{- if eq $i 0 }}
       {{- $s.Address }}:{{ $s.Port }}
     {{- end }}
