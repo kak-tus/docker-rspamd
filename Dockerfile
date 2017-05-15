@@ -29,6 +29,7 @@ COPY redis.conf.template /root/redis.conf.template
 COPY greylist.conf.template /etc/rspamd/modules.d/greylist.conf
 COPY metrics.conf.template /etc/rspamd/local.d/metrics.conf
 COPY mx_check.conf.template /etc/rspamd/modules.d/mx_check.conf
+COPY worker-normal.inc.template /etc/rspamd/local.d/worker-normal.inc
 
 ENV USER_UID=1000
 ENV USER_GID=1000
