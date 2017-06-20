@@ -1,6 +1,22 @@
 dcc {
-    host = "dccd.weave.local";
-    port = 10030;
+    host = "
+      {{- if service "dccd" }}
+        {{- range $i, $s := service "dccd~_agent" }}
+          {{- if eq $i 0 }}
+            {{- $s.Address }}
+          {{- end }}
+        {{- end }}
+      {{- else }}dccd.weave.local
+      {{- end }}";
+    port =
+      {{- if service "dccd" }}
+        {{- range $i, $s := service "dccd~_agent" }}
+          {{- if eq $i 0 }}
+            {{- $s.Port }}
+          {{- end }}
+        {{- end }}
+      {{- else }}10030
+      {{- end }};
 
     .include(try=true,priority=5) "${DBDIR}/dynamic/dcc.conf"
     .include(try=true,priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/dcc.conf"
