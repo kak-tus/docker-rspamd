@@ -1,16 +1,35 @@
 {{- if service "db" }}
-  {{- range $i, $s := service "db~_agent" }}
-    {{- if eq $i 0 }}
+  {{- range $s := service "db~_agent" }}
+    {{- if not ( scratch.Key "addr" ) }}
+      {{- scratch.Set "addr" "1" }}
       {{- $s.Address }}
     {{- end }}
   {{- end }}
-{{- else }}db.weave.local
+{{- else }}
+  {{- range $dc := datacenters }}
+    {{- range $s := $dc | printf "db@%s" | service }}
+      {{- if not ( scratch.Key "addr2" ) }}
+        {{- scratch.Set "addr2" "1" }}
+        {{- $s.Address }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}:
 {{- if service "db" }}
-  {{- range $i, $s := service "db~_agent" }}
-    {{- if eq $i 0 }}
+  {{- range $s := service "db~_agent" }}
+    {{- if not ( scratch.Key "port" ) }}
+      {{- scratch.Set "port" "1" }}
       {{- $s.Port }}
     {{- end }}
   {{- end }}
-{{- else }}5432
-{{- end }}:*:postgres:{{ with secret "secret/ansible/docker_postgresql/pg_password" }}{{ .Data.value }}{{ end }}
+{{- else }}
+  {{- range $dc := datacenters }}
+    {{- range $s := $dc | printf "db@%s" | service }}
+      {{- if not ( scratch.Key "port2" ) }}
+        {{- scratch.Set "port2" "1" }}
+        {{- $s.Port }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}:*:postgres:
+{{- with secret "secret/ansible/docker_postgresql/pg_password" }}{{ .Data.value }}{{ end }}

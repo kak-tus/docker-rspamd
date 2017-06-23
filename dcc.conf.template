@@ -1,21 +1,39 @@
 dcc {
     host = "
       {{- if service "dccd" }}
-        {{- range $i, $s := service "dccd~_agent" }}
-          {{- if eq $i 0 }}
+        {{- range $s := service "dccd~_agent" }}
+          {{- if not ( scratch.Key "addr" ) }}
+            {{- scratch.Set "addr" "1" }}
             {{- $s.Address }}
           {{- end }}
         {{- end }}
-      {{- else }}dccd.weave.local
+      {{- else }}
+        {{- range $dc := datacenters }}
+          {{- range $s := $dc | printf "dccd@%s" | service }}
+            {{- if not ( scratch.Key "addr2" ) }}
+              {{- scratch.Set "addr2" "1" }}
+              {{- $s.Address }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
       {{- end }}";
     port =
       {{- if service "dccd" }}
-        {{- range $i, $s := service "dccd~_agent" }}
-          {{- if eq $i 0 }}
+        {{- range $s := service "dccd~_agent" }}
+          {{- if not ( scratch.Key "port" ) }}
+            {{- scratch.Set "port" "1" }}
             {{- $s.Port }}
           {{- end }}
         {{- end }}
-      {{- else }}10030
+      {{- else }}
+        {{- range $dc := datacenters }}
+          {{- range $s := $dc | printf "dccd@%s" | service }}
+            {{- if not ( scratch.Key "port2" ) }}
+              {{- scratch.Set "port2" "1" }}
+              {{- $s.Port }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
       {{- end }};
 
     .include(try=true,priority=5) "${DBDIR}/dynamic/dcc.conf"

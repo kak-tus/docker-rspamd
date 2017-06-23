@@ -18,22 +18,40 @@ learn_do() {
 
   db_host="
   {{- if service "db" }}
-    {{- range $i, $s := service "db~_agent" }}
-      {{- if eq $i 0 }}
+    {{- range $s := service "db~_agent" }}
+      {{- if not ( scratch.Key "addr" ) }}
+        {{- scratch.Set "addr" "1" }}
         {{- $s.Address }}
       {{- end }}
     {{- end }}
-  {{- else }}db.weave.local
+  {{- else }}
+    {{- range $dc := datacenters }}
+      {{- range $s := $dc | printf "db@%s" | service }}
+        {{- if not ( scratch.Key "addr2" ) }}
+          {{- scratch.Set "addr2" "1" }}
+          {{- $s.Address }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
   {{- end }}"
 
   rspamd_host="
   {{- if service "rspamd-controller" }}
-    {{- range $i, $s := service "rspamd-controller~_agent" }}
-      {{- if eq $i 0 }}
+    {{- range $s := service "rspamd-controller~_agent" }}
+      {{- if not ( scratch.Key "addr3" ) }}
+        {{- scratch.Set "addr3" "1" }}
         {{- $s.Address }}:{{ $s.Port }}
       {{- end }}
     {{- end }}
-  {{- else }}rspamd.weave.local:11334
+  {{- else }}
+    {{- range $dc := datacenters }}
+      {{- range $s := $dc | printf "rspamd-controller@%s" | service }}
+        {{- if not ( scratch.Key "addr4" ) }}
+          {{- scratch.Set "addr4" "1" }}
+          {{- $s.Address }}:{{ $s.Port }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
   {{- end }}"
 
   ids=$( psql -At -U postgres -h "$db_host" mail -c "
