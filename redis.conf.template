@@ -1,6 +1,6 @@
 servers = "
-{{- if service "redis-rspamd" }}
-  {{- range $s := service "redis-rspamd~_agent" }}
+{{- if service "redis" }}
+  {{- range $s := service "redis~_agent" }}
     {{- if not ( scratch.Key "addr" ) }}
       {{- scratch.Set "addr" "1" }}
       {{- $s.Address }}:{{ $s.Port }}
@@ -8,7 +8,7 @@ servers = "
   {{- end }}
 {{- else }}
   {{- range $dc := datacenters }}
-    {{- range $s := $dc | printf "redis-rspamd@%s" | service }}
+    {{- range $s := $dc | printf "redis@%s" | service }}
       {{- if not ( scratch.Key "addr2" ) }}
         {{- scratch.Set "addr2" "1" }}
         {{- $s.Address }}:{{ $s.Port }}
