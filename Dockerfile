@@ -40,4 +40,4 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 11333 11334
 
-CMD ["/usr/local/bin/consul-template", "-config", "/root/templates/service.hcl"]
+CMD ["/usr/local/bin/entrypoint.sh"]
