@@ -18,15 +18,15 @@ learn_do() {
 
   db_host="
   {{- if service "db" }}
-    {{- range $s := service "db~_agent" }}
-      {{- if not ( scratch.Key "addr" ) }}
-        {{- scratch.Set "addr" "1" }}
+    {{- range $s := service "db~_agent" | toJSON | plugin "rttfix" | parseJSON }}
+      {{- if not ( scratch.Key "addr1" ) }}
+        {{- scratch.Set "addr1" "1" }}
         {{- $s.Address }}
       {{- end }}
     {{- end }}
   {{- else }}
-    {{- range $dc := datacenters }}
-      {{- range $s := $dc | printf "db@%s" | service }}
+    {{- range $dc := datacenters true }}
+      {{- range $s := $dc | printf "db@%s" | service | toJSON | plugin "rttfix" | parseJSON }}
         {{- if not ( scratch.Key "addr2" ) }}
           {{- scratch.Set "addr2" "1" }}
           {{- $s.Address }}
@@ -37,15 +37,15 @@ learn_do() {
 
   rspamd_host="
   {{- if service "rspamd-controller" }}
-    {{- range $s := service "rspamd-controller~_agent" }}
+    {{- range $s := service "rspamd-controller~_agent" | toJSON | plugin "rttfix" | parseJSON }}
       {{- if not ( scratch.Key "addr3" ) }}
         {{- scratch.Set "addr3" "1" }}
         {{- $s.Address }}:{{ $s.Port }}
       {{- end }}
     {{- end }}
   {{- else }}
-    {{- range $dc := datacenters }}
-      {{- range $s := $dc | printf "rspamd-controller@%s" | service }}
+    {{- range $dc := datacenters true }}
+      {{- range $s := $dc | printf "rspamd-controller@%s" | service | toJSON | plugin "rttfix" | parseJSON }}
         {{- if not ( scratch.Key "addr4" ) }}
           {{- scratch.Set "addr4" "1" }}
           {{- $s.Address }}:{{ $s.Port }}

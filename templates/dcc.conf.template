@@ -1,15 +1,15 @@
 dcc {
     host = "
       {{- if service "dccd" }}
-        {{- range $s := service "dccd~_agent" }}
-          {{- if not ( scratch.Key "addr" ) }}
-            {{- scratch.Set "addr" "1" }}
+        {{- range $s := service "dccd~_agent" | toJSON | plugin "rttfix" | parseJSON }}
+          {{- if not ( scratch.Key "addr1" ) }}
+            {{- scratch.Set "addr1" "1" }}
             {{- $s.Address }}
           {{- end }}
         {{- end }}
       {{- else }}
-        {{- range $dc := datacenters }}
-          {{- range $s := $dc | printf "dccd@%s" | service }}
+        {{- range $dc := datacenters true }}
+          {{- range $s := $dc | printf "dccd@%s" | service | toJSON | plugin "rttfix" | parseJSON }}
             {{- if not ( scratch.Key "addr2" ) }}
               {{- scratch.Set "addr2" "1" }}
               {{- $s.Address }}
@@ -19,15 +19,15 @@ dcc {
       {{- end }}";
     port =
       {{- if service "dccd" }}
-        {{- range $s := service "dccd~_agent" }}
-          {{- if not ( scratch.Key "port" ) }}
-            {{- scratch.Set "port" "1" }}
+        {{- range $s := service "dccd~_agent" | toJSON | plugin "rttfix" | parseJSON }}
+          {{- if not ( scratch.Key "port1" ) }}
+            {{- scratch.Set "port1" "1" }}
             {{- $s.Port }}
           {{- end }}
         {{- end }}
       {{- else }}
-        {{- range $dc := datacenters }}
-          {{- range $s := $dc | printf "dccd@%s" | service }}
+        {{- range $dc := datacenters true }}
+          {{- range $s := $dc | printf "dccd@%s" | service | toJSON | plugin "rttfix" | parseJSON }}
             {{- if not ( scratch.Key "port2" ) }}
               {{- scratch.Set "port2" "1" }}
               {{- $s.Port }}
